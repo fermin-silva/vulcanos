@@ -80,7 +80,7 @@
 
         <dependency>
             <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-server</artifactId>
+            <artifactId>jersey-bundle</artifactId>
             <version>${jersey.version}</version>
         </dependency>
         <dependency>
@@ -105,6 +105,16 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
+
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+	    	<artifactId>maven-compiler-plugin</artifactId>
+		    <version>2.0.2</version>
+		    <configuration>
+	        	<source>1.8</source>
+	        	<target>1.8</target>
+		    </configuration>
+		</plugin>
         </plugins>
     </build>
 
