@@ -29,15 +29,7 @@ public class PeriodsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@QueryParam("day") Integer day) throws SQLException {
-        if (day == null) {
-            throw new WebApplicationException(
-                    Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                            .entity("day parameter is mandatory")
-                            .build()
-            );
-        }
-
+    public String get() throws SQLException {
         JSONArray arr = new JSONArray();
         
         for (Period period : dao.getPeriods()) {
