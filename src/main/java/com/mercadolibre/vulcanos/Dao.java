@@ -1,19 +1,22 @@
 package com.mercadolibre.vulcanos;
 
+import com.mercadolibre.vulcanos.PeriodBuilder.Period;
 import com.mercadolibre.vulcanos.PlanetaryModel.Forecast;
 
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Fermin on 8/3/16.
  */
-public class ForecastDao {
+public class Dao {
 
     public static final String FILE = "./forecast";
 
     private Connection connection;
 
-    public ForecastDao() throws Exception {
+    public Dao() throws Exception {
         Class.forName("org.h2.Driver");
 
         connection = DriverManager.getConnection("jdbc:h2:" + FILE +
@@ -83,6 +86,27 @@ public class ForecastDao {
             }
 
             return null;
+        }
+        finally {
+            if (st != null) st.close();
+        }
+    }
+    
+    public List<Period> getPeriods() throws SQLException {
+    	List<Period> periods = new LinkedList<>();
+    	
+        PreparedStatement st = null;
+        try {
+            st = prepare("SELECT * FROM periods");
+
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next()) {
+                periods.add(new Period(Forecast.valueOf(rs.getString("forecast")),
+                                       rs.getInt("day_from"), rs.getInt("day_to")));
+            }
+
+            return periods;
         }
         finally {
             if (st != null) st.close();

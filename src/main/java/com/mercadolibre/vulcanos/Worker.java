@@ -14,7 +14,7 @@ public class Worker extends Thread {
     public static final Logger LOGGER = Logger.getLogger(Worker.class);
 
     @Inject
-    private ForecastDao forecastDao;
+    private Dao forecastDao;
 
     @Inject
     private PlanetaryModel planetaryModel;

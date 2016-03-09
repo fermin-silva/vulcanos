@@ -2,26 +2,30 @@ package com.mercadolibre.vulcanos.rest;
 
 import com.mercadolibre.vulcanos.Dao;
 import com.mercadolibre.vulcanos.PeriodBuilder;
+import com.mercadolibre.vulcanos.PeriodBuilder.Period;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
 
 /**
  * Created by Fermin on 8/3/16.
  */
-@Path("/weather")
-public class WeatherResource {
+@Path("/periods")
+public class PeriodsResource {
 
     //in a real big application this shouldn't be part of the rest
     //layer and should be moved to a controller or similar
 
     @Inject
-    private Dao forecastDao;
+    private Dao dao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,21 +38,18 @@ public class WeatherResource {
             );
         }
 
-        PeriodBuilder.Period period = forecastDao.getPeriod(day);
-
-        JSONObject j = new JSONObject();
-
-        j.put("day", day);
-        j.put("forecast", forecastDao.get(day));
-
-        if (period != null) {
-            JSONObject jPeriod = new JSONObject();
-            jPeriod.put("dayFrom", period.getDayFrom());
+        JSONArray arr = new JSONArray();
+        
+        for (Period period : dao.getPeriods()) {
+        	JSONObject jPeriod = new JSONObject();
+            
+        	jPeriod.put("dayFrom", period.getDayFrom());
             jPeriod.put("dayTo", period.getDayTo());
-
-            j.put("period", jPeriod);
-        }
-
-        return j.toString();
+            jPeriod.put("forecast", period.getForecast().name());
+            
+            arr.put(jPeriod);
+		}
+        
+        return arr.toString();
     }
 }
